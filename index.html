@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>¿Cuánta agua pierde tu planta? | HydroLoop</title>
+<meta name="description" content="Calculadora gratuita de eficiencia hídrica industrial. Descubre tu score y potencial de ahorro en 30 segundos.">
+
+<!-- META PIXEL — Reemplaza TU_PIXEL_ID con tu ID real de Meta -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+// fbq('init', 'TU_PIXEL_ID');  // ← DESCOMENTA y pon tu Pixel ID
+// fbq('track', 'PageView');
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F3F1EC; --paper: #FFFFFF; --ink: #1A1A18; --ink2: #3A3A36; --ink3: #6B6B63; --muted: #8A8A82;
+  --border: #E0DED6; --teal: #0B6E4F; --teal-bg: #E6F5F0; --teal-light: #10A37F;
+  --navy: #14213D; --coral: #E17055; --amber: #F18F01; --blue: #1B4965;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Outfit', sans-serif; background: var(--bg); color: var(--ink2); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+
+.container { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+/* Hero */
+.hero { background: linear-gradient(135deg, var(--ink) 0%, var(--navy) 60%, var(--teal) 100%); padding: 48px 24px 56px; text-align: center; position: relative; overflow: hidden; }
+.hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 350px; height: 350px; background: radial-gradient(circle, rgba(16,163,127,0.15) 0%, transparent 70%); border-radius: 50%; }
+.hero-badge { display: inline-block; background: rgba(16,163,127,0.2); color: var(--teal-light); padding: 5px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+.hero h1 { font-family: 'Playfair Display', serif; font-size: 2.3rem; font-weight: 800; color: #fff; line-height: 1.15; margin-bottom: 12px; position: relative; }
+.hero p { font-size: 1rem; color: rgba(255,255,255,0.6); max-width: 520px; margin: 0 auto; position: relative; }
+.hero-features { margin-top: 20px; display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; }
+.hero-features span { font-size: 12px; color: rgba(255,255,255,0.45); }
+
+/* Form Card */
+.calc-card { background: var(--paper); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin: -30px auto 0; position: relative; box-shadow: 0 8px 40px rgba(0,0,0,0.06); }
+.calc-title { font-size: 18px; font-weight: 700; color: var(--ink); margin-bottom: 20px; }
+
+.form-label { font-size: 13px; font-weight: 600; color: var(--ink2); margin-bottom: 4px; display: block; }
+.form-hint { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+.form-group { margin-bottom: 18px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+input[type="number"], select { width: 100%; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 15px; font-family: 'Outfit', sans-serif; outline: none; background: #fff; transition: border 0.2s; }
+input:focus, select:focus { border-color: var(--teal); }
+
+.industry-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.industry-btn { padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 14px; font-family: 'Outfit', sans-serif; transition: all 0.2s; color: var(--ink3); }
+.industry-btn.active { border: 2px solid var(--teal); background: var(--teal-bg); color: var(--teal); font-weight: 600; }
+
+.treatment-grid { display: flex; gap: 8px; }
+.treatment-btn { flex: 1; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: #fff; cursor: pointer; font-size: 14px; font-family: 'Outfit', sans-serif; transition: all 0.2s; text-align: center; }
+.treatment-btn.active { border: 2px solid var(--teal); background: var(--teal-bg); color: var(--teal); font-weight: 600; }
+
+.submit-btn { width: 100%; padding: 16px; background: var(--teal); color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; transition: background 0.3s; }
+.submit-btn:hover { background: #095C4B; }
+.submit-btn:disabled { background: #D0CEC6; cursor: not-allowed; }
+
+/* Results */
+.results { display: none; margin-top: 24px; }
+.results.visible { display: block; animation: fadeUp 0.6s ease; }
+
+.score-card { background: var(--paper); border: 1px solid var(--border); border-radius: 16px; padding: 28px; text-align: center; margin-bottom: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+.score-grade { font-family: 'Playfair Display', serif; font-size: 4.5rem; font-weight: 800; line-height: 1; }
+.score-num { font-size: 1.2rem; font-weight: 600; color: var(--ink2); margin-top: 4px; }
+.score-label { font-size: 14px; color: var(--muted); margin-top: 8px; }
+
+.locked-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+.locked-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.locked-card { background: var(--paper); border: 1px solid var(--border); border-radius: 12px; padding: 16px; position: relative; overflow: hidden; }
+.locked-card .content { filter: blur(8px); user-select: none; }
+.locked-card.unlocked .content { filter: none; user-select: auto; }
+.locked-card .overlay { position: absolute; inset: 0; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; z-index: 2; }
+.locked-card.unlocked .overlay { display: none; }
+.lock-badge { background: var(--ink); color: #fff; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+
+.card-title { font-size: 13px; font-weight: 600; color: var(--ink); margin-bottom: 8px; }
+.metric-big { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; line-height: 1.1; }
+.metric-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+/* Unlock box */
+.unlock-box { background: linear-gradient(135deg, var(--navy), var(--teal)); border-radius: 16px; padding: 28px; text-align: center; color: #fff; margin: 16px 0; }
+.unlock-box h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; margin-bottom: 8px; }
+.unlock-box p { font-size: 14px; opacity: 0.7; margin-bottom: 16px; }
+.email-row { display: flex; gap: 8px; max-width: 440px; margin: 0 auto; }
+.email-row input { flex: 1; padding: 14px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: #fff; font-size: 15px; font-family: 'Outfit', sans-serif; outline: none; }
+.email-row input::placeholder { color: rgba(255,255,255,0.4); }
+.unlock-btn { padding: 14px 28px; background: var(--teal-light); color: #fff; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; white-space: nowrap; }
+.unlock-note { font-size: 11px; opacity: 0.4; margin-top: 10px; }
+
+/* CTA Post-unlock */
+.cta-box { background: var(--paper); border: 2px solid var(--teal); border-radius: 16px; padding: 28px; text-align: center; margin-top: 16px; display: none; }
+.cta-box.visible { display: block; animation: fadeUp 0.4s ease; }
+.cta-box h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--ink); margin-bottom: 8px; }
+.cta-box p { font-size: 14px; color: var(--ink3); margin-bottom: 20px; }
+.cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.cta-primary { padding: 14px 32px; background: var(--teal); color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; font-family: 'Outfit', sans-serif; text-decoration: none; display: inline-block; }
+.cta-secondary { padding: 14px 32px; background: transparent; color: var(--teal); border: 2px solid var(--teal); border-radius: 10px; font-size: 16px; font-weight: 600; cursor: pointer; font-family: 'Outfit', sans-serif; text-decoration: none; display: inline-block; }
+
+.social-proof { text-align: center; padding: 40px 20px 30px; font-size: 12px; color: #A3A39A; letter-spacing: 1.5px; }
+.footer { text-align: center; padding: 10px; font-size: 11px; color: #A3A39A; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 600px) {
+  .hero h1 { font-size: 1.7rem; }
+  .form-grid, .locked-grid { grid-template-columns: 1fr; }
+  .locked-grid-3 { grid-template-columns: 1fr; }
+  .email-row { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">⚡ Herramienta Gratuita</div>
+  <h1>¿Cuánta agua está perdiendo tu planta?</h1>
+  <p>Ingresa 4 datos de tu operación y obtén un diagnóstico instantáneo con tu score de eficiencia hídrica.</p>
+  <div class="hero-features">
+    <span>⚡ Resultado en 30 seg</span>
+    <span>🔒 Sin compromiso</span>
+    <span>📊 Benchmark vs. tu industria</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- CALCULATOR -->
+<div class="calc-card">
+  <div class="calc-title">📊 Calculadora de Eficiencia Hídrica</div>
+
+  <div class="form-group">
+    <label class="form-label">1. ¿Qué tipo de planta es?</label>
+    <div class="industry-grid" id="industryGrid">
+      <button class="industry-btn" data-val="avicola" onclick="selectIndustry(this)">🥚 Avícola</button>
+      <button class="industry-btn" data-val="champinones" onclick="selectIndustry(this)">🍄 Champiñones</button>
+      <button class="industry-btn" data-val="lactea" onclick="selectIndustry(this)">🥛 Láctea</button>
+      <button class="industry-btn" data-val="agricola" onclick="selectIndustry(this)">🌾 Agricultura</button>
+      <button class="industry-btn" data-val="otro" onclick="selectIndustry(this)">🏭 Otra</button>
+    </div>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-group">
+      <label class="form-label">2. Consumo de agua fresca</label>
+      <div class="form-hint">m³ por día</div>
+      <input type="number" id="consumption" placeholder="Ej: 150">
+    </div>
+    <div class="form-group">
+      <label class="form-label">3. Producción diaria</label>
+      <div class="form-hint" id="prodHint">unidades/día</div>
+      <input type="number" id="production" placeholder="Ej: 5000">
+    </div>
+    <div class="form-group">
+      <label class="form-label">4. ¿Qué % del agua reciclan?</label>
+      <div class="form-hint">Si no reciclan, ponga 0</div>
+      <input type="number" id="recyclePct" placeholder="Ej: 30" value="0" min="0" max="100">
+    </div>
+    <div class="form-group">
+      <label class="form-label">5. ¿Tienen PTAR?</label>
+      <div class="form-hint">Planta de tratamiento de aguas</div>
+      <div class="treatment-grid" id="treatmentGrid">
+        <button class="treatment-btn" data-val="si" onclick="selectTreatment(this)">Sí</button>
+        <button class="treatment-btn" data-val="no" onclick="selectTreatment(this)">No</button>
+        <button class="treatment-btn" data-val="parcial" onclick="selectTreatment(this)">Parcial</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="submit-btn" id="calcBtn" onclick="calculate()" disabled>⚡ Calcular mi Score de Eficiencia</button>
+</div>
+
+<!-- RESULTS (hidden initially) -->
+<div class="results" id="resultsSection">
+  <div class="score-card">
+    <div style="font-size:14px;color:var(--muted);font-weight:500;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;">Tu Score de Eficiencia Hídrica</div>
+    <div class="score-grade" id="scoreGrade">—</div>
+    <div class="score-num" id="scoreNum">—/100</div>
+    <div class="score-label" id="scoreLabel"></div>
+  </div>
+
+  <div class="locked-grid">
+    <div class="locked-card" id="card-savings">
+      <div class="overlay"><div class="lock-badge">🔒 Ingresa tu email</div></div>
+      <div class="content">
+        <div class="card-title">💰 Potencial de Ahorro Mensual</div>
+        <div class="metric-big" style="color:var(--teal)" id="savingsValue">—</div>
+        <div class="metric-sub" id="savingsSub">—</div>
+      </div>
+    </div>
+    <div class="locked-card" id="card-diag">
+      <div class="overlay"><div class="lock-badge">🔒 Ingresa tu email</div></div>
+      <div class="content">
+        <div class="card-title">📊 Diagnóstico Preliminar</div>
+        <div style="font-size:14px;color:var(--ink2);line-height:1.6" id="diagText">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="locked-grid-3">
+    <div class="locked-card" id="card-reuso"><div class="overlay"><div class="lock-badge">🔒</div></div><div class="content"><div class="card-title">🔄 Reúso Recomendado</div><div class="metric-big" style="color:var(--blue)" id="reusoVal">—</div><div class="metric-sub" id="reusoSub">—</div></div></div>
+    <div class="locked-card" id="card-qw"><div class="overlay"><div class="lock-badge">🔒</div></div><div class="content"><div class="card-title">⚡ Quick Wins</div><div class="metric-big" style="color:var(--amber)" id="qwVal">—</div><div class="metric-sub">mejoras sin inversión</div></div></div>
+    <div class="locked-card" id="card-roi"><div class="overlay"><div class="lock-badge">🔒</div></div><div class="content"><div class="card-title">📅 ROI Estimado</div><div class="metric-big" style="color:var(--teal)" id="roiVal">—</div><div class="metric-sub">retorno típico</div></div></div>
+  </div>
+
+  <!-- Email Gate -->
+  <div class="unlock-box" id="unlockBox">
+    <h3>🔓 Desbloquea tu diagnóstico completo</h3>
+    <p>Ingresa tu email para ver tu potencial de ahorro y recomendaciones personalizadas.</p>
+    <div class="email-row">
+      <input type="email" id="emailInput" placeholder="tu@empresa.cl">
+      <button class="unlock-btn" onclick="unlockResults()">Desbloquear →</button>
+    </div>
+    <div class="unlock-note">Sin spam. Solo tu diagnóstico y una propuesta personalizada.</div>
+  </div>
+
+  <!-- CTA Post-unlock -->
+  <div class="cta-box" id="ctaBox">
+    <h3>¿Quieres el diagnóstico completo de tu planta?</h3>
+    <p>Completa nuestra auditoría remota (15 min) y recibe informe profesional con Water Pinch Analysis y recomendaciones priorizadas.</p>
+    <div class="cta-buttons">
+      <!-- REEMPLAZA estas URLs con las tuyas -->
+      <a href="https://TU-APP.streamlit.app/Auditoría_Remota" class="cta-primary">📋 Iniciar Auditoría Remota</a>
+      <a href="https://calendly.com/TU-LINK" class="cta-secondary">📅 Agendar Videollamada</a>
+    </div>
+  </div>
+</div>
+
+<div class="social-proof">
+  INDUSTRIAS QUE CONFÍAN EN HYDROLOOP<br><br>
+  🥚 Avícolas &nbsp;&nbsp; 🍄 Champiñones &nbsp;&nbsp; 🥛 Lácteas &nbsp;&nbsp; 💧 APR &nbsp;&nbsp; 🌾 Agricultura
+</div>
+<div class="footer">HydroLoop · Cierra el Ciclo del Agua · hydroloop.cl</div>
+
+</div>
+
+<script>
+// ─── State ───
+let state = { industry: '', treatment: '' };
+
+const BENCHMARKS = {
+  avicola: { best: 5, avg: 12, worst: 25, unit: 'L/1000 huevos', prodHint: 'miles de huevos/día', sm: 0.6 },
+  champinones: { best: 15, avg: 22, worst: 35, unit: 'L/kg', prodHint: 'kg/día', sm: 0.55 },
+  lactea: { best: 1.5, avg: 3.5, worst: 8, unit: 'L/L leche', prodHint: 'litros leche/día', sm: 0.65 },
+  agricola: { best: 200, avg: 500, worst: 1200, unit: 'L/kg fruta', prodHint: 'kg fruta/día', sm: 0.4 },
+  otro: { best: 8, avg: 18, worst: 40, unit: 'L/kg producto', prodHint: 'unidades/día', sm: 0.5 },
+};
+
+function selectIndustry(el) {
+  document.querySelectorAll('.industry-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  state.industry = el.dataset.val;
+  document.getElementById('prodHint').textContent = BENCHMARKS[state.industry].prodHint;
+  checkReady();
+}
+
+function selectTreatment(el) {
+  document.querySelectorAll('.treatment-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  state.treatment = el.dataset.val;
+  checkReady();
+}
+
+function checkReady() {
+  const c = document.getElementById('consumption').value;
+  const p = document.getElementById('production').value;
+  document.getElementById('calcBtn').disabled = !(state.industry && c > 0 && p > 0);
+}
+document.getElementById('consumption').addEventListener('input', checkReady);
+document.getElementById('production').addEventListener('input', checkReady);
+
+function calculate() {
+  const bench = BENCHMARKS[state.industry];
+  const cons = parseFloat(document.getElementById('consumption').value) || 0;
+  const prod = parseFloat(document.getElementById('production').value) || 1;
+  const recyc = parseFloat(document.getElementById('recyclePct').value) || 0;
+
+  const intensity = (cons * 1000) / prod;
+  let score;
+  if (intensity <= bench.best) score = 95;
+  else if (intensity >= bench.worst) score = 15;
+  else { score = Math.round(15 + ((bench.worst - intensity) / (bench.worst - bench.best)) * 80); }
+
+  if (recyc > 50) score = Math.min(100, score + 10);
+  else if (recyc > 20) score = Math.min(100, score + 5);
+  else if (recyc === 0) score = Math.max(0, score - 10);
+  if (state.treatment === 'no') score = Math.max(0, score - 10);
+  score = Math.max(5, Math.min(99, score));
+
+  const gap = Math.max(0, intensity - bench.best);
+  const potRed = gap * bench.sm;
+  const potM3 = Math.round((potRed * prod) / 1000);
+  const potMoney = Math.round(potM3 * 1.2 * 30);
+  const potPct = Math.round((potRed / intensity) * 100);
+
+  const grade = score >= 80 ? 'A' : score >= 60 ? 'B' : score >= 40 ? 'C' : score >= 20 ? 'D' : 'F';
+  const gradeColor = score >= 80 ? 'var(--teal)' : score >= 60 ? 'var(--blue)' : score >= 40 ? 'var(--amber)' : 'var(--coral)';
+
+  // Display
+  const el = (id) => document.getElementById(id);
+  el('scoreGrade').textContent = grade;
+  el('scoreGrade').style.color = gradeColor;
+  el('scoreNum').textContent = score + ' / 100';
+  el('scoreLabel').innerHTML = `Intensidad: <strong style="color:${gradeColor}">${intensity.toFixed(1)} ${bench.unit}</strong> · Benchmark: mejor ${bench.best} · promedio ${bench.avg}`;
+  el('savingsValue').textContent = '$' + potMoney.toLocaleString() + ' USD';
+  el('savingsSub').textContent = `~${potM3} m³/día recuperables · ${potPct}% de mejora`;
+  el('diagText').textContent = score >= 70 ? 'Eficiencia por encima del promedio. Oportunidades en procesos específicos y economía circular.' :
+    score >= 40 ? 'Margen significativo de mejora. Un Water Pinch Analysis reduciría consumo 15-25% sin inversión mayor.' :
+    'Oportunidad importante. Consumo muy por encima del benchmark — hay quick wins de alto impacto.';
+  el('reusoVal').textContent = Math.min(70, recyc + potPct) + '%';
+  el('reusoSub').textContent = 'vs. actual: ' + recyc + '%';
+  el('qwVal').textContent = score < 40 ? '5-7' : score < 70 ? '3-4' : '1-2';
+  el('roiVal').textContent = (score < 40 ? '6-12' : score < 70 ? '12-18' : '18-24') + ' meses';
+
+  el('resultsSection').classList.add('visible');
+  el('resultsSection').scrollIntoView({ behavior: 'smooth' });
+
+  // Store for email submission
+  state.results = { score, grade, potMoney, potM3, intensity: intensity.toFixed(1), cons, prod, recyc };
+
+  // Meta Pixel: track calculation
+  // if (typeof fbq !== 'undefined') fbq('track', 'Lead', { content_name: 'calculator', value: score });
+
+  // Google Sheets: anonymous tracking
+  sendToSheets({ email: '(anónimo)', industry: state.industry, consumption: cons, production: prod,
+    recycle_pct: recyc, treatment: state.treatment, score, grade, savings: potMoney, source: 'landing_anonymous' });
+}
+
+function unlockResults() {
+  const email = document.getElementById('emailInput').value.trim();
+  if (!email || !email.includes('@')) { document.getElementById('emailInput').style.borderColor = 'var(--coral)'; return; }
+
+  // Unlock all cards
+  document.querySelectorAll('.locked-card').forEach(c => c.classList.add('unlocked'));
+  document.getElementById('unlockBox').style.display = 'none';
+  document.getElementById('ctaBox').classList.add('visible');
+
+  // Meta Pixel: track conversion
+  // if (typeof fbq !== 'undefined') fbq('track', 'CompleteRegistration', { content_name: 'email_unlock', value: state.results?.score });
+
+  // Google Sheets: qualified lead
+  sendToSheets({ email, industry: state.industry, consumption: state.results?.cons, production: state.results?.prod,
+    recycle_pct: state.results?.recyc, treatment: state.treatment, score: state.results?.score,
+    grade: state.results?.grade, savings: state.results?.potMoney, source: 'landing_qualified' });
+}
+
+// ─── Google Sheets via Apps Script Web App ───
+function sendToSheets(data) {
+  // REEMPLAZA esta URL con tu Google Apps Script Web App URL
+  const SHEETS_URL = 'https://script.google.com/macros/s/TU_SCRIPT_ID/exec';
+  
+  if (SHEETS_URL.includes('TU_SCRIPT_ID')) return; // Skip if not configured
+  
+  fetch(SHEETS_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...data, timestamp: new Date().toISOString() })
+  }).catch(() => {});
+}
+</script>
+
+</body>
+</html>
